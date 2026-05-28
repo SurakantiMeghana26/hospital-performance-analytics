@@ -22,3 +22,66 @@ models:
               values: [1, 2, 3, 4, 5]
               config:
                 where: "hospital_overall_rating is not null"
+
+  - name: dim_hospitals
+    description: "Hospital dimension table"
+    columns:
+      - name: hospital_key
+        description: "Surrogate key"
+        tests:
+          - not_null
+          - unique
+      
+      - name: facility_id
+        description: "Natural key"
+        tests:
+          - not_null
+
+  - name: dim_states
+    description: "States dimension"
+    columns:
+      - name: state_key
+        description: "Surrogate key"
+        tests:
+          - not_null
+          - unique
+      
+      - name: state_code
+        description: "US state code"
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_date
+    description: "Date dimension"
+    columns:
+      - name: date_key
+        description: "Surrogate key in YYYYMMDD format"
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_hospital_metrics
+    description: "Hospital quality metrics fact table"
+    columns:
+      - name: metric_id
+        description: "Surrogate key"
+        tests:
+          - not_null
+          - unique
+      
+      - name: hospital_key
+        description: "FK to dim_hospitals"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_hospitals')
+              field: hospital_key
+      
+      - name: state_key
+        description: "FK to dim_states"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_states')
+              field: state_key
