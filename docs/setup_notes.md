@@ -124,3 +124,36 @@ hospital-analytics-meghana-2026/
 
 └── processed/            # Processed Parquet files
 
+---
+
+## ✅ Day 4: Snowflake Integration
+
+### S3 to Snowflake Pipeline
+
+**Steps Completed:**
+- ✅ Created CSV file format
+- ✅ Created external stage (S3 connection)
+- ✅ Created raw_hospitals table
+- ✅ Loaded 5,000 hospitals from S3 → Snowflake
+- ✅ Verified data with SQL queries
+
+**Data Loaded:**
+- Total Records: 5,000 US hospitals
+- Source: CMS Hospital Compare API
+- Format: CSV with 30 columns
+- Storage: HEALTHCARE_ANALYTICS.RAW_DATA.raw_hospitals
+
+**SQL Files Created:**
+- `src/storage/snowflake_setup.sql` - Complete Snowflake setup
+
+**Key Learnings:**
+- Schema flexibility in raw layer (Bronze)
+- Importance of ON_ERROR = 'CONTINUE' for resilient loading
+- Medallion architecture: Raw → Staging → Marts
+- File format objects for reusability
+- External stages for S3 integration
+
+---
+
+*Last Updated: May 28, 2026 - Day 4 Complete*
+
