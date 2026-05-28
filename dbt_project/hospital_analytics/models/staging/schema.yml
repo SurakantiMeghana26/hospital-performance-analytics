@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_hospitals
+    description: "Cleaned hospital data from CMS"
+    columns:
+      - name: facility_id
+        description: "Unique hospital identifier"
+        tests:
+          - not_null
+          - unique
+      
+      - name: state
+        description: "US state code"
+        tests:
+          - not_null
+      
+      - name: hospital_overall_rating
+        description: "Hospital rating 1-5"
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+              config:
+                where: "hospital_overall_rating is not null"
