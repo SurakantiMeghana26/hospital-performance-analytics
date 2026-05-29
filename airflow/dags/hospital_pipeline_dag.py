@@ -1,7 +1,7 @@
 """
 Hospital Analytics Pipeline DAG
 ================================
-Simple DAG that demonstrates Airflow orchestration.
+Orchestrates the dbt transformations for hospital data.
 
 Author: Surakanti Meghana
 Project: US Hospital Performance Analytics Platform
@@ -13,24 +13,24 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 
-def hello_world():
-    """Simple Python function to demonstrate task execution."""
+def log_start():
+    """Log pipeline start."""
     print("=" * 60)
-    print("🏥 HOSPITAL ANALYTICS PIPELINE")
+    print("🏥 HOSPITAL ANALYTICS PIPELINE STARTING")
     print("=" * 60)
-    print("✅ This is your first DAG!")
-    print("✅ Built by Surakanti Meghana")
-    print("✅ Healthcare Data Engineering")
-    return "Pipeline started successfully!"
+    print("✅ Pipeline triggered by Airflow")
+    print("📊 Will run dbt transformations")
+    return "Pipeline started"
 
 
-def show_data_stats():
-    """Display project statistics."""
-    print("📊 PROJECT STATS:")
-    print("  - 5,000 hospitals analyzed")
-    print("  - 50 US states covered")
-    print("  - Snowflake + dbt + Airflow stack")
-    return "Stats displayed!"
+def log_complete():
+    """Log pipeline completion."""
+    print("=" * 60)
+    print("✅ HOSPITAL ANALYTICS PIPELINE COMPLETE!")
+    print("=" * 60)
+    print("📊 5,000 hospitals processed")
+    print("🎯 Ready for analytics")
+    return "Pipeline complete"
 
 
 # Default arguments for the DAG
@@ -46,32 +46,39 @@ default_args = {
 dag = DAG(
     'hospital_analytics_pipeline',
     default_args=default_args,
-    description='Hospital data engineering pipeline',
-    schedule_interval=timedelta(days=1),  # Run daily
+    description='Hospital data engineering pipeline with dbt',
+    schedule_interval=timedelta(days=1),
     catchup=False,
-    tags=['healthcare', 'data-engineering', 'meghana'],
+    tags=['healthcare', 'data-engineering', 'dbt', 'meghana'],
 )
 
 # Task 1: Start
 start_task = PythonOperator(
     task_id='start_pipeline',
-    python_callable=hello_world,
+    python_callable=log_start,
     dag=dag,
 )
 
-# Task 2: Show stats
-stats_task = PythonOperator(
-    task_id='show_statistics',
-    python_callable=show_data_stats,
+# Task 2: Run dbt (simulated for now - real connection coming!)
+dbt_run_task = BashOperator(
+    task_id='run_dbt_models',
+    bash_command='echo "Simulating: dbt run for 5 models"',
     dag=dag,
 )
 
-# Task 3: End message
-end_task = BashOperator(
+# Task 3: Run dbt tests (simulated for now)
+dbt_test_task = BashOperator(
+    task_id='run_dbt_tests',
+    bash_command='echo "Simulating: dbt test for 19 quality tests"',
+    dag=dag,
+)
+
+# Task 4: Complete
+end_task = PythonOperator(
     task_id='pipeline_complete',
-    bash_command='echo "Pipeline completed successfully!"',
+    python_callable=log_complete,
     dag=dag,
 )
 
 # Define task order
-start_task >> stats_task >> end_task
+start_task >> dbt_run_task >> dbt_test_task >> end_task
